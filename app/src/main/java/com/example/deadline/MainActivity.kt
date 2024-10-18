@@ -43,12 +43,37 @@ class MainActivity :
     }
 
     override fun onFling(
-        p0: MotionEvent?,
-        event1: MotionEvent,
+        e1: MotionEvent?,
+        e2: MotionEvent,
         velocityX: Float,
         velocityY: Float
     ): Boolean {
-        Log.d(DEBUG_TAG, "onFling: $event1")
+        // Check if e1 and e2 are not null
+        if (e1 == null) return false
+
+        val diffX = e2.x - e1.x
+        val diffY = e2.y - e1.y
+
+        // Determine if the swipe is horizontal or vertical
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            // Horizontal swipe
+            if (diffX > 0) {
+                // Right swipe
+                Log.d(DEBUG_TAG, "Swipe Right")
+            } else {
+                // Left swipe
+                Log.d(DEBUG_TAG, "Swipe Left")
+            }
+        } else {
+            // Vertical swipe
+            if (diffY > 0) {
+                // Down swipe
+                Log.d(DEBUG_TAG, "Swipe Down")
+            } else {
+                // Up swipe
+                Log.d(DEBUG_TAG, "Swipe Up")
+            }
+        }
         return true
     }
 
