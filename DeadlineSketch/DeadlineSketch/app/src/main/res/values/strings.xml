@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">DeadlineSketch</string>
+    <string name="gear_icon_desc">Settings</string>
+    <string name="todo_list">ToDo List</string>
+    <string name="test_button">Test Button</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
