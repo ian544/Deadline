@@ -17,17 +17,23 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.PopupWindow
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
+        val recyclerView: RecyclerView = findViewById(R.id.deadlineList)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        //recyclerView.adapter = TaskAdapter()
+
+        val dataTask = LoadTask(this)
+        dataTask.setRecyclerView(recyclerView)
+        dataTask.execute()
+
 
         val gearIcon: ImageView = findViewById(R.id.gearIcon)
         gearIcon.setOnClickListener { view ->
