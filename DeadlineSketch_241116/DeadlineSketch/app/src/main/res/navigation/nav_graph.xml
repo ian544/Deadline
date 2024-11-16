@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/listFragment">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="ca.unb.mobiledev.deadlinesketch.ListFragment"
+        android:label="Add Task">
+        <action
+            android:id="@+id/action_listFragment_to_createTaskFragment"
+            app:destination="@id/createTaskFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/createTaskFragment"
+        android:name="ca.unb.mobiledev.deadlinesketch.CreateTaskFragment"
+        android:label="Create Task">
+        <action
+            android:id="@+id/action_createTaskFragment_to_listFragment"
+            app:destination="@id/listFragment"/>
+        <action
+            android:id="@+id/action_createTaskFragment_to_setTaskParametersFragment"
+            app:destination="@id/setTaskParametersFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/setTaskParametersFragment"
+        android:name="ca.unb.mobiledev.deadlinesketch.SetTaskParametersFragment"
+        android:label="Set Task Parameters">
+        <action
+            android:id="@+id/action_setTaskParametersFragment_to_listFragment"
+            app:destination="@id/listFragment"/>
+        <action
+            android:id="@+id/action_setTaskParametersFragment_to_createTaskFragment"
+            app:destination="@id/createTaskFragment"/>
+        <action
+            android:id="@+id/action_setTaskParametersFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="ca.unb.mobiledev.deadlinesketch.NotificationsFragment"
+        android:label="Set Notifications">
+        <action
+            android:id="@+id/action_notificationsFragment_to_listFragment"
+            app:destination="@id/listFragment"/>
+        <action
+            android:id="@+id/action_notificationsFragment_to_setTaskParametersFragment"
+            app:destination="@id/setTaskParametersFragment"/>
+    </fragment>
+</navigation>
