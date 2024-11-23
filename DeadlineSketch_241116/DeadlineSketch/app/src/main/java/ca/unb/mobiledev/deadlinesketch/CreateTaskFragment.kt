@@ -14,12 +14,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import ca.unb.mobiledev.deadlinesketch.Repo.dbRepo
 
 class CreateTaskFragment : Fragment() {
     private val viewModel: TaskViewModel by activityViewModels()
     private lateinit var title: EditText
     private lateinit var dueDate: EditText
     private lateinit var description: EditText
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,6 +87,7 @@ class CreateTaskFragment : Fragment() {
             viewModel.title = title.text.toString()
             viewModel.dueDate = dueDate.toString()
             viewModel.description = description.text.toString()
+
             parentFragmentManager.beginTransaction()
                 .replace(R.id.wizardFragmentContainer, SetTaskParametersFragment())
                 .commit()

@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ca.unb.mobiledev.deadlinesketch.entity.Task
 
-class TaskAdapter(private val parentActivity: Activity, private val mDataset: ArrayList<Task>) :
+class TaskAdapter(private val parentActivity: Activity, private val mDataset: List<Task>) :
     RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,13 +25,13 @@ class TaskAdapter(private val parentActivity: Activity, private val mDataset: Ar
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val task = mDataset[position]
-        holder.titleTextView.text = task.name
-        holder.dueDateTextView.text = task.dueDate
+        holder.titleTextView.text = task.title
+        holder.dueDateTextView.text = task.due_date.toString()
         holder.itemView.setOnClickListener {
             val intent = Intent(parentActivity, DetailActivity::class.java)
-            intent.putExtra("taskTitle", task.name)
+            intent.putExtra("taskTitle", task.title)
             intent.putExtra("taskDescription", task.description)
-            intent.putExtra("taskDueDate", task.dueDate)
+            intent.putExtra("taskDueDate", task.due_date)
             parentActivity.startActivity(intent)
         }
     }
