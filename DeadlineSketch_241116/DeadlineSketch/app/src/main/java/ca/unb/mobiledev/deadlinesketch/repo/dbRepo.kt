@@ -108,6 +108,23 @@ class dbRepo(context: Context) {
         }
     }
 
+    fun getTaskSingle(taskID: Int): List<Task>{
+        val dataReadFuture: Future<List<Task>> = AppDatabase.databaseWriterExecutor.submit(
+            Callable {
+                task_Dao.listSingleTask(taskID)
+            })
+        return try {
+            while (!dataReadFuture.isDone) {
+            }
+            dataReadFuture.get()
+        }catch(e: ExecutionException){
+            emptyList()
+        }
+        catch(e: InterruptedException){
+            emptyList()
+        }
+    }
+
     fun getNotif(task_id: Int): List<Notification>{
         val dataReadFuture: Future<List<Notification>> = AppDatabase.databaseWriterExecutor.submit(
             Callable {
