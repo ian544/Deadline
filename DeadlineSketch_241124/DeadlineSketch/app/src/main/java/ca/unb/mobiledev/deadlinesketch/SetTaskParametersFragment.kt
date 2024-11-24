@@ -26,6 +26,7 @@ import androidx.core.view.get
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
 
 class SetTaskParametersFragment : Fragment() {
@@ -39,9 +40,11 @@ class SetTaskParametersFragment : Fragment() {
     private lateinit var setpriority: Spinner
     private var positionList: Int = -1
     private var positionPriority: Int = -1
+    private  lateinit var dbRepo: dbRepo
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        dbRepo = dbRepo(context)
         viewPager = (context as AddEditTaskHost).viewPager
     }
 
@@ -94,8 +97,14 @@ class SetTaskParametersFragment : Fragment() {
         val tags = arrayOf("Work", "Personal", "School") // Example data
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tags)
         setTag.setAdapter(adapter)
-
-        val taskLists = arrayOf("ToDo", "Archive", "Next Week", "Planning")
+        var listList = dbRepo.getList()
+        var i = 0
+        var lists = arrayOf<String>()
+        while(i < listList.size){
+            lists = lists + listList[i].list_name
+            i = i+1;
+        }
+        val taskLists = lists
         val listAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, taskLists)
         listAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         setList.adapter = listAdapter

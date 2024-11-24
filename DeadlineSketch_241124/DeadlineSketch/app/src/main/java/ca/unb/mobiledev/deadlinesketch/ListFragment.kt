@@ -18,22 +18,22 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 import com.google.android.material.button.MaterialButton
 
 
 class ListFragment : Fragment(R.layout.fragment_list) {
+    private lateinit var dbRepo: dbRepo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dbRepo = dbRepo(requireActivity().applicationContext)
 
         val titleButton: Button = view.findViewById(R.id.ListTitle)
         val fragmentName = arguments?.getString("name") ?: ""
         titleButton.text = fragmentName
+        var curList = dbRepo.getSingleListName(fragmentName)
 
         val logo: ImageView = view.findViewById(R.id.logo_home)
         logo.setOnClickListener {
@@ -77,6 +77,9 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.taskListRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
+        val dataTask: LoadTaskFrag = LoadTaskFrag(requireActivity(), fragmentName)
+        dataTask.setRecyclerView(recyclerView)
+        dataTask.execute()
         var adapter = TaskListTaskAdapter(this)
         recyclerView.adapter = TaskListTaskAdapter(this)
 

@@ -1,31 +1,31 @@
 package ca.unb.mobiledev.deadlinesketch
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import ca.unb.mobiledev.deadlinesketch.entity.Task
 import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
-class LoadTask(private val activity: AppCompatActivity) {
+class LoadTaskFrag(private val activity: FragmentActivity, private val listName: String) {
     private val appContext: Context = activity.applicationContext
     private var recyclerView: RecyclerView? = null
     private var dbRepo: dbRepo = dbRepo(appContext)
 
-    fun setRecyclerView(recyclerView: RecyclerView?): LoadTask {
+    fun setRecyclerView(recyclerView: RecyclerView?): LoadTaskFrag {
         this.recyclerView = recyclerView
         return this
     }
 
     fun execute() {
         AppExecutors.databaseExecutor.execute{
-
-            val tasksjson = dbRepo.getTaskAll()
+            var dbList = dbRepo.getSingleListName(listName)
+            var dbTasks = dbRepo.getTaskList(dbList[0].list_id)
 
             for (i in 1 until DOWNLOAD_TIME) {
                 sleep()
             }
-            AppExecutors.mainThreadExecutor.execute { updateDisplay(tasksjson)}
+            AppExecutors.mainThreadExecutor.execute { updateDisplay(dbTasks)}
         }
     }
 
