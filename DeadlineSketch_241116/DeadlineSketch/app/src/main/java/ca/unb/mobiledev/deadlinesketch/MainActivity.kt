@@ -24,6 +24,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.unb.mobiledev.deadlinesketch.Repo.dbRepo
+import kotlinx.coroutines.delay
+import java.lang.Thread.sleep
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,10 +39,12 @@ class MainActivity : AppCompatActivity() {
             dbRepo.insertList("To_Do")
             dbRepo.insertList("Archive")
             dbRepo.insertList("Planning")
+            sleep(2500) //if you don't sleep, and the next if statement triggers, errors occur
         }
         var taskSize = dbRepo.getTaskAll().size
         if(taskSize == 0){
-            dbRepo.insertTask(dbRepo.getList()[0].list_id, "Test Task", "This task is a test task", "2024-12-02", "2024-09-04",4)
+            dbRepo.insertTask(dbRepo.getList()[0].list_id, "Test Task", "This task is a test task", "2024-12-02", "2024-09-04","Emergancy")
+            sleep(2500)
         }
         //val navController = findNavController(R.id.fragmentContainerView)
 

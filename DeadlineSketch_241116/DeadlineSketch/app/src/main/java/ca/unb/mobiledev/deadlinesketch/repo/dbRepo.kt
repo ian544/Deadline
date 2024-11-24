@@ -40,7 +40,7 @@ class dbRepo(context: Context) {
         AppDatabase.databaseWriterExecutor.execute { notif_Dao.insertNotification(notif) }
     }
 
-    fun insertTask(lID: Int, tName: String, tDescrip: String, dueDate: String, actDate: String, prio: Int){
+    fun insertTask(lID: Int, tName: String, tDescrip: String, dueDate: String, actDate: String, prio: String){
         var task = Task()
         task.list_id = lID
         task.title = tName
