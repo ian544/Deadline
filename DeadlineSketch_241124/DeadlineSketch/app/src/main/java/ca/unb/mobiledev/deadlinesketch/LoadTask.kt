@@ -3,14 +3,14 @@ package ca.unb.mobiledev.deadlinesketch
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import android.os.Handler
-import android.os.Looper
 import android.widget.Toast
-import java.util.concurrent.Executors
+import ca.unb.mobiledev.deadlinesketch.entity.Task
+import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
 class LoadTask(private val activity: AppCompatActivity) {
     private val appContext: Context = activity.applicationContext
     private var recyclerView: RecyclerView? = null
+    private var dbRepo: dbRepo = dbRepo(appContext)
 
     fun setRecyclerView(recyclerView: RecyclerView?): LoadTask {
         this.recyclerView = recyclerView
@@ -19,8 +19,8 @@ class LoadTask(private val activity: AppCompatActivity) {
 
     fun execute() {
         AppExecutors.databaseExecutor.execute{
-            val jsontasks = JsonUtils(appContext)
-            val tasksjson = jsontasks.getTasks()
+
+            val tasksjson = dbRepo.getTaskAll()
 
             for (i in 1 until DOWNLOAD_TIME) {
                 sleep()
@@ -38,12 +38,12 @@ class LoadTask(private val activity: AppCompatActivity) {
         }
     }
 
-    private fun updateDisplay(taskList: ArrayList<Task>) {
+    private fun updateDisplay(taskList: List<ca.unb.mobiledev.deadlinesketch.entity.Task>) {
         setupRecyclerView(taskList)
         Toast.makeText(appContext, "File loaded", Toast.LENGTH_LONG).show()
     }
 
-    private fun setupRecyclerView(taskList: ArrayList<Task>) {
+    private fun setupRecyclerView(taskList: List<Task>) {
         recyclerView?.adapter = TaskAdapter(activity, taskList)
         recyclerView?.addItemDecoration(DeadlineTaskBorder(activity))
     }

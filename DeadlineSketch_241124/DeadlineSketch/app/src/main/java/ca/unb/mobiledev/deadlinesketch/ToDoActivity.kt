@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
 class ToDoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +20,15 @@ class ToDoActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_to_do)
 
-        val fragmentNames = listOf("ToDo List", "Archive List", "Planning List")
+        val dbRepo: dbRepo = dbRepo(this)
+        var listList = dbRepo.getList()
+        var i = 0
+        var listNames: MutableList<String> = mutableListOf<String>()
+        while(i < listList.size){
+            listNames.add(i, listList[i].list_name + " List")
+            i = i+1
+        }
+        val fragmentNames = listNames
         val viewPager: ViewPager2 = findViewById(R.id.viewPager)
         viewPager.adapter = ListPagerAdapter(this, fragmentNames)
 
