@@ -10,21 +10,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class TaskViewModel : ViewModel() {
-    var title: String? = null
-    var dueDate: String? = null
-    var description: String? = null
-    var setTag: String? = null
-    var setList: String? = null
-    var setActivationDate: String? = null
-    var setpriority: String? = null
-    var notifTitle: String? = null
-    var notifDesc: String? = null
-    var notifDate: String? = null
-    var notifTime: String? = null
+    var title: String = ""
+    var dueDate: String = ""
+    var description: String = ""
+    var setTag: String = ""
+    var setList: String = ""
+    var setActivationDate: String = ""
+    var setpriority: String = ""
+    var notifTitle: String = ""
+    var notifDesc: String = ""
+    var notifDate: String = ""
+    var notifTime: String = ""
     var notifConfirmRepeating: Boolean = false
-    var notifinterval: String? = null
+    var notifinterval: String = ""
     var isEditMode: Boolean = false
-    var taskID: Int? = null
+    var taskID: Int = -1
     var create_FillFromDB: Boolean = true
     var param_FillFromDB: Boolean = true
     //LiveData for observing task data; waiting for database integration

@@ -19,6 +19,9 @@ interface TaskDao {
     @Query("SELECT * from task_table WHERE task_table.task_id = :taskID")
     fun listSingleTask(taskID: Int): List<Task>
 
+    @Query("SELECT * from task_table WHERE task_table.title = :taskName")
+    fun listSingleTaskName(taskName: String): List<Task>
+
     @Update(Task::class)
     fun changeTask(task: Task)
 

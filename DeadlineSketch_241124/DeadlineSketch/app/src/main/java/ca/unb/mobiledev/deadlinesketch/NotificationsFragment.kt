@@ -26,6 +26,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
+import java.lang.Thread.sleep
 
 
 class NotificationsFragment : Fragment() {
@@ -38,9 +40,11 @@ class NotificationsFragment : Fragment() {
     private lateinit var notifConfirmRepeating: CheckBox
     private lateinit var notifinterval: Spinner
     private var positionInterval: Int = -1
+    private lateinit var dbRepo: dbRepo
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        dbRepo = dbRepo(context)
         viewPager = (context as AddEditTaskHost).viewPager
     }
 
@@ -159,6 +163,12 @@ class NotificationsFragment : Fragment() {
             AlertDialog.Builder(requireContext())
                 .setMessage("Submit Task to DataBase and Exit?")
                 .setPositiveButton("Yes") { _, _ ->
+                    dbRepo.insertTask(dbRepo.getSingleListName(viewModel.setList)[0].list_id, viewModel.title, viewModel.description, viewModel.dueDate, viewModel.setActivationDate,viewModel.setpriority)
+                    sleep(500)
+                    dbRepo.insertNotif(viewModel.notifTitle,viewModel.notifDesc,dbRepo.getTaskSingleName(viewModel.title)[0].task_id, viewModel.notifTime, viewModel.notifDate, viewModel.notifConfirmRepeating, viewModel.notifinterval)
+
+                    sleep(500)
+                    dbRepo.insertTag(viewModel.setTag,dbRepo.getTaskSingleName(viewModel.title)[0].task_id)
                     activity?.finish()
                 }
                 .setNegativeButton("Cancel", null)

@@ -17,6 +17,9 @@ interface listDao {
     @Query("SELECT * FROM list_table WHERE list_id = :listID")
     fun listSingleList(listID: Int): List<list>
 
+    @Query("SELECT * FROM list_table WHERE list_name = :listName")
+    fun listSingleListName(listName: String): List<list>
+
     @Update(list::class)
     fun updateList(list: list)
 

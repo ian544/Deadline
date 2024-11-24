@@ -91,6 +91,22 @@ class dbRepo(context: Context) {
             emptyList()
         }
     }
+    fun getSingleListName(listName: String): List<list>{
+        val dataReadFuture: Future<List<list>> = AppDatabase.databaseWriterExecutor.submit(
+            Callable {
+                list_dao.listSingleListName(listName)
+            })
+        return try {
+            while (!dataReadFuture.isDone) {
+            }
+            dataReadFuture.get()
+        }catch(e: ExecutionException){
+            emptyList()
+        }
+        catch(e: InterruptedException){
+            emptyList()
+        }
+    }
 
     fun getTaskList(list_id: Int): List<Task>{
         val dataReadFuture: Future<List<Task>> = AppDatabase.databaseWriterExecutor.submit(
@@ -129,6 +145,23 @@ class dbRepo(context: Context) {
         val dataReadFuture: Future<List<Task>> = AppDatabase.databaseWriterExecutor.submit(
             Callable {
                 task_Dao.listSingleTask(taskID)
+            })
+        return try {
+            while (!dataReadFuture.isDone) {
+            }
+            dataReadFuture.get()
+        }catch(e: ExecutionException){
+            emptyList()
+        }
+        catch(e: InterruptedException){
+            emptyList()
+        }
+    }
+
+    fun getTaskSingleName(taskName: String): List<Task>{
+        val dataReadFuture: Future<List<Task>> = AppDatabase.databaseWriterExecutor.submit(
+            Callable {
+                task_Dao.listSingleTaskName(taskName)
             })
         return try {
             while (!dataReadFuture.isDone) {

@@ -25,7 +25,7 @@ class ToDoActivity : AppCompatActivity() {
         var i = 0
         var listNames: MutableList<String> = mutableListOf<String>()
         while(i < listList.size){
-            listNames.add(i, listList[i].list_name + " List")
+            listNames.add(i, listList[i].list_name)
             i = i+1
         }
         val fragmentNames = listNames

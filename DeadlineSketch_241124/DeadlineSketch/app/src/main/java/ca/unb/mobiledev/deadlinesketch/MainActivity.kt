@@ -36,7 +36,9 @@ class MainActivity : AppCompatActivity() {
         var listSize = dbRepo.getList().size
         if(listSize == 0){
             dbRepo.insertList("To_Do")
+            sleep(1000)
             dbRepo.insertList("Archive")
+            sleep(1000)
             dbRepo.insertList("Planning")
             sleep(2500) //if you don't sleep, and the next if statement triggers, errors occur
         }
