@@ -10,8 +10,8 @@ class Task {
     var task_id: Int = 0
     var list_id: Int = 0
     var title: String = ""
-    var due_date: Long = 0
+    var due_date: String = ""
     var priority: Int = 0
-    var activate_time: Long = 0
+    var activate_time: String = ""
     var description: String = ""
 }

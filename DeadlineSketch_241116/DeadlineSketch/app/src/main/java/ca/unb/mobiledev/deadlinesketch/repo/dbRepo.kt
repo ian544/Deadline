@@ -29,7 +29,7 @@ class dbRepo(context: Context) {
         AppDatabase.databaseWriterExecutor.execute { list_dao.insertList(list) }
     }
 
-    fun insertNotif(nName: String, nDescrip: String, taskID: Int, actTime: Long, isRec: Boolean, recTime: Long){
+    fun insertNotif(nName: String, nDescrip: String, taskID: Int, actTime: String, isRec: Boolean, recTime: String){
         var notif = Notification()
         notif.notification_name = nName
         notif.notification_description = nDescrip
@@ -40,7 +40,7 @@ class dbRepo(context: Context) {
         AppDatabase.databaseWriterExecutor.execute { notif_Dao.insertNotification(notif) }
     }
 
-    fun insertTask(lID: Int, tName: String, tDescrip: String, dueDate: Long, actDate: Long, prio: Int){
+    fun insertTask(lID: Int, tName: String, tDescrip: String, dueDate: String, actDate: String, prio: Int){
         var task = Task()
         task.list_id = lID
         task.title = tName

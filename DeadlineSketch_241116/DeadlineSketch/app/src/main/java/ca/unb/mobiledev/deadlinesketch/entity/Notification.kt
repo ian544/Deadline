@@ -13,8 +13,8 @@ class Notification {
     var task_id: Int = 0
     var notification_name: String = ""
     var notification_description: String =""
-    var activation_time: Long = 0
+    var activation_time: String = ""
     var isReacurring: Boolean = false
-    var reaccuring_time: Long = 0
+    var reaccuring_time: String = ""
 
 }
