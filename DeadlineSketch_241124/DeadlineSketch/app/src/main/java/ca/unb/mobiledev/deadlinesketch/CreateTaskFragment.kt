@@ -2,12 +2,14 @@ package ca.unb.mobiledev.deadlinesketch
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -42,9 +44,9 @@ class CreateTaskFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        title = view.findViewById(R.id.task_title)
-        dueDate = view.findViewById(R.id.notificationSetDate)
-        description = view.findViewById(R.id.notificationdescription)
+        title = view.findViewById(R.id.create_TaskTitle)
+        dueDate = view.findViewById(R.id.createTaskSetDate)
+        description = view.findViewById(R.id.createTaskDescription)
 
         if(!viewModel.title.isNullOrEmpty()){
             title.setText(viewModel.title)
@@ -96,8 +98,10 @@ class CreateTaskFragment : Fragment() {
                 .show()
         }
 
-        dueDate.setOnClickListener { showDatePickerDialog() }
-        viewModel.dueDate = dueDate.toString()
+        dueDate.setOnClickListener {
+            showDatePickerDialog()
+        }
+
 
         val btnNext: Button = view.findViewById(R.id.ParamButton1)
         btnNext.setOnClickListener {
@@ -114,13 +118,10 @@ class CreateTaskFragment : Fragment() {
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
-            //findNavController().navigate(R.id.action_createTaskFragment_to_listFragment)
         }
     }
 
-    companion object {
-        //fun newInstance() = CeateTaskFragment()
-    }
+    companion object {}
 
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
@@ -130,6 +131,7 @@ class CreateTaskFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
             val selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
             dueDate.setText(selectedDate)
+            viewModel.dueDate = selectedDate
         }, year, month, day)
         datePickerDialog.show()
     }

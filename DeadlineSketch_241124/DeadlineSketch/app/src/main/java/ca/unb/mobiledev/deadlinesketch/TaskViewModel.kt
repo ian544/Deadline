@@ -25,8 +25,8 @@ class TaskViewModel : ViewModel() {
     var notifinterval: String? = null
     var isEditMode: Boolean = false
     var taskID: Int? = null
-    var create_FillFromDB: Boolean = true
-    var param_FillFromDB: Boolean = true
+    var created_Title: Boolean = false
+    var created_DueDate: Boolean = false
     //LiveData for observing task data; waiting for database integration
     var taskList: LiveData<List<Task>> = MutableLiveData()  //replace with repository info once available
     init {

@@ -34,10 +34,11 @@ class NotificationsFragment : Fragment() {
     private lateinit var notifTitle: EditText
     private lateinit var notifDesc: EditText
     private lateinit var notifDate: EditText
-    private lateinit var notifTime: EditText
+    private lateinit var notifTime: Spinner
     private lateinit var notifConfirmRepeating: CheckBox
     private lateinit var notifinterval: Spinner
     private var positionInterval: Int = -1
+    private var timePosition: Int = -1
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -71,9 +72,16 @@ class NotificationsFragment : Fragment() {
         notifTitle = view.findViewById(R.id.notificationTitle)
         notifDesc = view.findViewById(R.id.notificationdescription)
         notifDate = view.findViewById(R.id.notificationSetDate)
-        notifTime = view.findViewById(R.id.notificationTime)
+        notifTime = view.findViewById(R.id.time_spinner)
         notifConfirmRepeating = view.findViewById(R.id.notificationcheckBox)
         notifinterval = view.findViewById(R.id.list_spinner)
+
+        val timeList = arrayOf("6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00",
+            "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
+            "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "20:00", "20:30", "21:00", "21:30", "22:00")
+        val timeAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, timeList)
+        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        notifTime.adapter = timeAdapter
 
         val intervals = arrayOf("1 Day", "2 Days", "3 Days", "4 Days", "5 Days","6 Days","7 Days")
         val intervalAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, intervals)
@@ -117,9 +125,12 @@ class NotificationsFragment : Fragment() {
         }
 
         if(!viewModel.notifTime.isNullOrEmpty()){
-            notifTime.setText(viewModel.notifTime)
+            timePosition = timeAdapter.getPosition(viewModel.notifTime)
+            if(timePosition >= 0){
+                notifTime.setSelection(timePosition)
+            }
         }else{
-            notifTime.text = null
+            Log.i(TAG, "Invalid time selection.")
         }
 
         notifConfirmRepeating.isChecked = viewModel.notifConfirmRepeating
@@ -134,10 +145,15 @@ class NotificationsFragment : Fragment() {
         }
 
         notifDate.setOnClickListener { showDatePickerDialog() }
-        viewModel.notifDate = notifDate.toString()
 
-        notifTime.setOnClickListener { showTimePickerDialog() }
-        viewModel.notifTime = notifTime.toString()
+        notifTime.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val selectedTime = parent.getItemAtPosition(position).toString()
+                viewModel.notifTime = selectedTime
+                Log.i(TAG,selectedTime)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
 
         notifinterval.isEnabled = notifConfirmRepeating.isChecked
 
@@ -191,25 +207,10 @@ class NotificationsFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
             val selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
             notifDate.setText(selectedDate)
+            viewModel.notifDate = selectedDate
         }, year, month, day)
         datePickerDialog.show()
     }
 
-    //Method causes fatal error; not sure why yet.
-    private fun showTimePickerDialog() {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-
-        val timePickerDialog = TimePickerDialog(requireContext(), { _, selectedHour, selectedMinute ->
-            val selectedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
-            notifTime.setText(selectedTime)
-        }, hour, minute, true)
-
-        timePickerDialog.show()
-    }
-
-    companion object {
-        //fun newInstance() = NotificationsFragment()
-    }
+    companion object {}
 }

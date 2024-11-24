@@ -83,8 +83,12 @@ class SetTaskParametersFragment : Fragment() {
         }
         if(!viewModel.dueDate.isNullOrEmpty()){
             taskDueDate.text = viewModel.dueDate
+            val status = viewModel.dueDate.isNullOrEmpty()
+            Log.i(TAG, status.toString()+", "+viewModel.dueDate.toString())
         }else{
             taskDueDate.text = null
+            val status = viewModel.dueDate.isNullOrEmpty()
+            Log.i(TAG, status.toString()+", "+viewModel.dueDate.toString())
         }
 
         val tags = arrayOf("Work", "Personal", "School") // Example data
@@ -150,7 +154,6 @@ class SetTaskParametersFragment : Fragment() {
         }
 
         setActivationDate.setOnClickListener { showDatePickerDialog() }
-        viewModel.setActivationDate = setActivationDate.toString()
 
         setpriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -183,6 +186,24 @@ class SetTaskParametersFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(!viewModel.title.isNullOrEmpty()){
+            taskTitle.text = viewModel.title
+        }else{
+            taskTitle.text = null
+        }
+        if(!viewModel.dueDate.isNullOrEmpty()){
+            taskDueDate.text = viewModel.dueDate
+            val status = viewModel.dueDate.isNullOrEmpty()
+            Log.i(TAG, status.toString()+", "+viewModel.dueDate.toString())
+        }else{
+            taskDueDate.text = null
+            val status = viewModel.dueDate.isNullOrEmpty()
+            Log.i(TAG, status.toString()+", "+viewModel.dueDate.toString())
+        }
+    }
+
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -191,11 +212,10 @@ class SetTaskParametersFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
             val selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
             setActivationDate.setText(selectedDate)
+            viewModel.setActivationDate = selectedDate
         }, year, month, day)
         datePickerDialog.show()
     }
 
-    companion object {
-        //fun newInstance() = SetTaskParametersFragment()
-    }
+    companion object {}
 }
