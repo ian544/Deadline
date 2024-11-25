@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 //            popupWindow.isFocusable = true
 //            popupWindow.showAsDropDown(view, 0, 0)
         }
-        val testButton: Button = findViewById(R.id.testButton)
+        val testButton: Button = findViewById(R.id.calendarButton)
         testButton.setOnClickListener {
             val intent = Intent(this, TestActivity::class.java)
             startActivity(intent)
