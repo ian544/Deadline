@@ -44,18 +44,12 @@ class MainActivity : AppCompatActivity() {
         var listSize = dbRepo.getList().size
         if(listSize == 0){
             dbRepo.insertList("To_Do")
-            sleep(1000)
+            sleep(100)
             dbRepo.insertList("Archive")
-            sleep(1000)
+            sleep(100)
             dbRepo.insertList("Planning")
-            sleep(2500) //if you don't sleep, and the next if statement triggers, errors occur
+            sleep(200) //if you don't sleep, and the next if statement triggers, errors occur
         }
-        var taskSize = dbRepo.getTaskAll().size
-        if(taskSize == 0){
-            dbRepo.insertTask(dbRepo.getList()[0].list_id, "Test Task", "This task is a test task", "2024-12-02", "2024-09-04","Emergency")
-            sleep(2500)
-        }
-
         recyclerView = findViewById(R.id.deadlineList)
         recyclerView.layoutManager = LinearLayoutManager(this)
 

@@ -32,7 +32,7 @@ class dbRepo(context: Context) {
         AppDatabase.databaseWriterExecutor.execute { list_dao.insertList(list) }
     }
 
-    fun insertNotif(nName: String, nDescrip: String, taskID: Int, actTime: String, actDate: String, isRec: Boolean, recTime: String){
+    fun insertNotif(nName: String, nDescrip: String, taskID: Int, actTime: String, actDate: String, isRec: Boolean, recTime: String, disabled: Boolean){
         var notif = Notification()
         notif.notification_name = nName
         notif.notification_description = nDescrip
@@ -41,16 +41,18 @@ class dbRepo(context: Context) {
         notif.activation_date = actDate
         notif.reaccuring_time = recTime
         notif.isReacurring = isRec
+        notif.disabled = disabled
         AppDatabase.databaseWriterExecutor.execute { notif_Dao.insertNotification(notif) }
     }
 
-    fun insertTask(lID: Int, tName: String, tDescrip: String, dueDate: String, actDate: String, prio: String){
+    fun insertTask(lID: Int, tName: String, tDescrip: String, dueDate: String, actDate: String, prio: String, status: String){
         var task = Task()
         task.list_id = lID
         task.title = tName
         task.description = tDescrip
         task.due_date = dueDate
         task.activate_time = actDate
+        task.status = status
         task.priority = prio
         AppDatabase.databaseWriterExecutor.execute { task_Dao.insertTask(task) }
     }
@@ -72,6 +74,7 @@ class dbRepo(context: Context) {
         }
         while(!boop){
             //this is a terrible solution, but it works
+            //Update: This does not work all the time??
         }
         AppDatabase.databaseWriterExecutor.execute {
             var taskTask = task_Dao.listSingleTaskName(task.title)

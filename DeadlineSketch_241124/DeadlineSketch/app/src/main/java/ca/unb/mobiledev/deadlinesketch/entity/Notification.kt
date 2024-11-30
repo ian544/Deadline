@@ -16,5 +16,6 @@ class Notification {
     var activation_date: String = ""
     var isReacurring: Boolean = false
     var reaccuring_time: String = ""
+    var disabled: Boolean = false
 
 }

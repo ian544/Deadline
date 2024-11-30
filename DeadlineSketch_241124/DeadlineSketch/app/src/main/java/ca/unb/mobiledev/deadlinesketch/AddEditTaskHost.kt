@@ -60,6 +60,8 @@ class AddEditTaskHost : AppCompatActivity() {
         val task = taskList[0]
 
         var title = task.title
+        var status = "ACTIVE"
+        var notifDisabled = false
         var dueDate = task.due_date
         var description = task.description
         var tagID = 0
@@ -94,9 +96,11 @@ class AddEditTaskHost : AppCompatActivity() {
             notifinterval = notif.reaccuring_time
         }
 
+        viewModel.notifDisabled = notifDisabled
         viewModel.title = title
         viewModel.dueDate = dueDate
         viewModel.description = description
+        viewModel.status = status
         viewModel.tagID = tagID
         viewModel.setTag = setTag
         viewModel.setList = setList

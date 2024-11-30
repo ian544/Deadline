@@ -14,4 +14,5 @@ class Task {
     var priority: String = ""
     var activate_time: String = ""
     var description: String = ""
+    var status: String = ""
 }

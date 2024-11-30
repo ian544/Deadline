@@ -13,6 +13,7 @@ import ca.unb.mobiledev.deadlinesketch.entity.Task
 import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
 class TaskViewModel : ViewModel() {
+    var notifDisabled: Boolean = false
     var title: String = ""
     var dueDate: String = ""
     var description: String = ""
@@ -30,6 +31,7 @@ class TaskViewModel : ViewModel() {
     var notifinterval: String = ""
     var isEditMode: Boolean = false
     var taskID: Int = 0
+    var status: String = ""
     var originalList: Int = -1
     var originalListName: String = ""
 }

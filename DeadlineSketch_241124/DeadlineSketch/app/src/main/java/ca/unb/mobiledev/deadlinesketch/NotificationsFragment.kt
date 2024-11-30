@@ -197,6 +197,7 @@ class NotificationsFragment : Fragment() {
                         taskObject.priority = viewModel.setpriority
                         taskObject.activate_time = viewModel.setActivationDate
                         taskObject.description = viewModel.description
+                    taskObject.status = viewModel.status
 
                     val notifObject = Notification()
 
@@ -219,16 +220,19 @@ class NotificationsFragment : Fragment() {
                         tagObject.task_id = viewModel.taskID
                     }
                     if(viewModel.isEditMode){
+                        Log.i(TAG, viewModel.notifDisabled.toString())
                         Log.i(TAG, viewModel.taskID.toString() + tagObject.tag_id.toString() + notifObject.notification_id.toString())
                         dbRepo.updateEditedTask(taskObject, notifObject, tagObject)
                     }else{
+                        Log.i(TAG, viewModel.notifDisabled.toString())
                         //dbRepo.insertAndUpdateList(taskObject, notifObject, tagObject)
                         //couldn't get latch or a better wait async function to work, this has to do
-                        dbRepo.insertTask(dbRepo.getSingleListName(viewModel.setList)[0].list_id, viewModel.title, viewModel.description, viewModel.dueDate, viewModel.setActivationDate,viewModel.setpriority)
+                        dbRepo.insertTask(dbRepo.getSingleListName(viewModel.setList)[0].list_id, viewModel.title, viewModel.description, viewModel.dueDate, viewModel.setActivationDate,viewModel.setpriority, viewModel.status)
                         sleep(100)
-                        dbRepo.insertNotif(viewModel.notifTitle,viewModel.notifDesc,dbRepo.getTaskSingleName(viewModel.title)[0].task_id, viewModel.notifTime, viewModel.notifDate, viewModel.notifConfirmRepeating, viewModel.notifinterval)
+                        dbRepo.insertNotif(viewModel.notifTitle,viewModel.notifDesc,dbRepo.getTaskSingleName(viewModel.title)[0].task_id, viewModel.notifTime, viewModel.notifDate, viewModel.notifConfirmRepeating, viewModel.notifinterval, viewModel.notifDisabled)
                         dbRepo.insertTag(viewModel.setTag,dbRepo.getTaskSingleName(viewModel.title)[0].task_id)
                         sleep(100)
+
                     //dbRepo.insertTask(listID, viewModel.title, viewModel.description, viewModel.dueDate, viewModel.setActivationDate,viewModel.setpriority)
                     }
                     /*dbRepo.insertTask(dbRepo.getSingleListName(viewModel.setList)[0].list_id, viewModel.title, viewModel.description, viewModel.dueDate, viewModel.setActivationDate,viewModel.setpriority)
@@ -237,7 +241,7 @@ class NotificationsFragment : Fragment() {
                     sleep(500)
                     dbRepo.insertTag(viewModel.setTag,dbRepo.getTaskSingleName(viewModel.title)[0].task_id)
                     sleep(500)*/
-                    Log.i(TAG, "FINISHED")
+                    Log.i(TAG, viewModel.status)
                     activity?.finish()
                 }
                 .setNegativeButton("Cancel", null)
