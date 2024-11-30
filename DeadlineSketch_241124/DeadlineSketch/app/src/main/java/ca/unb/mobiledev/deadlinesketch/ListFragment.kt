@@ -1,5 +1,6 @@
 package ca.unb.mobiledev.deadlinesketch
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -16,24 +17,26 @@ import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity.LAYOUT_INFLATER_SERVICE
 import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ca.unb.mobiledev.deadlinesketch.entity.list
 import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 import com.google.android.material.button.MaterialButton
 
 
 class ListFragment : Fragment(R.layout.fragment_list) {
     private lateinit var dbRepo: dbRepo
+    private lateinit var fragmentName: String
+    private lateinit var curList: list
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dbRepo = dbRepo(requireActivity().applicationContext)
 
         val titleButton: Button = view.findViewById(R.id.ListTitle)
-        val fragmentName = arguments?.getString("name") ?: ""
+        fragmentName = arguments?.getString("name") ?: ""
         titleButton.text = fragmentName
-        var curList = dbRepo.getSingleListName(fragmentName)
+         curList = dbRepo.getSingleListName(fragmentName)[0]
 
         val logo: ImageView = view.findViewById(R.id.logo_home)
         logo.setOnClickListener {
@@ -75,20 +78,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             popupMenu.show()
         }
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.taskListRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        val dataTask: LoadTaskFrag = LoadTaskFrag(requireActivity(), fragmentName)
-        dataTask.setRecyclerView(recyclerView)
-        dataTask.execute()
-        var adapter = TaskListTaskAdapter(this)
-        recyclerView.adapter = TaskListTaskAdapter(this)
-
-        //ViewModel waiting for database integration
-        var viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
-        //LiveData from ViewModel, waiting for database integration
-        viewModel.taskList.observe(viewLifecycleOwner, Observer { tasks ->
-            tasks?.let { adapter.setTasks(it) }
-        })
+        updateDisplay(view, fragmentName, requireContext())
 
         val addTaskButton: MaterialButton = view.findViewById(R.id.toListButton)
         addTaskButton.setOnClickListener {
@@ -102,8 +92,12 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        view?.let { updateDisplay(it, fragmentName, requireContext()) }
     }
 
     companion object {
@@ -115,5 +109,14 @@ class ListFragment : Fragment(R.layout.fragment_list) {
                 }
             }
         }
+    }
+    fun updateDisplay(view: View, listName: String, context: Context){
+        val recyclerView: RecyclerView = view.findViewById(R.id.taskListRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        val dataTask = LoadTaskFragment(requireActivity(), listName, this)
+        dataTask.setRecyclerView(recyclerView)
+        dataTask.execute()
+        var taskList = dbRepo.getTaskList(curList.list_id)
+        recyclerView.adapter = TaskListTaskAdapter(this, taskList)
     }
 }

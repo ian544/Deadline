@@ -8,9 +8,13 @@ import ca.unb.mobiledev.deadlinesketch.entity.Task
 import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
 class LoadTask(private val activity: AppCompatActivity) {
-    private val appContext: Context = activity.applicationContext
+//    private val appContext: Context = activity.applicationContext
+//    private var dbRepo: dbRepo = dbRepo(appContext)
+    private var dbRepo:dbRepo = dbRepo(activity.applicationContext)
+
+
+
     private var recyclerView: RecyclerView? = null
-    private var dbRepo: dbRepo = dbRepo(appContext)
 
     fun setRecyclerView(recyclerView: RecyclerView?): LoadTask {
         this.recyclerView = recyclerView
@@ -38,9 +42,9 @@ class LoadTask(private val activity: AppCompatActivity) {
         }
     }
 
-    private fun updateDisplay(taskList: List<ca.unb.mobiledev.deadlinesketch.entity.Task>) {
+    private fun updateDisplay(taskList: List<Task>) {
         setupRecyclerView(taskList)
-        Toast.makeText(appContext, "File loaded", Toast.LENGTH_LONG).show()
+        //Toast.makeText(appContext, "File loaded", Toast.LENGTH_LONG).show()
     }
 
     private fun setupRecyclerView(taskList: List<Task>) {

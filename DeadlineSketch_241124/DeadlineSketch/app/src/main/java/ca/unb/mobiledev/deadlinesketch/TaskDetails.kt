@@ -1,19 +1,27 @@
 package ca.unb.mobiledev.deadlinesketch
 
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
 class TaskDetails : AppCompatActivity() {
+    private lateinit var dbRepo: dbRepo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.details_task)
+        dbRepo = dbRepo(applicationContext)
+
 
         var intent = intent
+        var taskID = intent.getIntExtra("taskID",-1)
+        Log.i(TAG,"Task Details: " + taskID.toString())
         var taskTitle = intent.getStringExtra("taskTitle")
         var taskDescription = intent.getStringExtra("taskDescription")
         var taskDueDate = intent.getStringExtra("taskDueDate")
@@ -43,11 +51,37 @@ class TaskDetails : AppCompatActivity() {
                 .setTitle("Edit Task")
                 .setMessage("Are you sure you want to edit this task?")
                 .setPositiveButton("Yes") { _, _ ->
-                    val taskID = 1  //need ID from DB
                     val editTask = Intent(this, AddEditTaskHost::class.java)
                     editTask.putExtra("isEditMode", true)
                     editTask.putExtra("taskID", taskID)
                     startActivity(editTask)
+                    //Remove TaskDetails activity from backstack
+                    finish()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        val deleteTask: Button = findViewById(R.id.delete_task_button)
+        deleteTask.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("!!!Warning - Delete Task - Warning!!!")
+                .setMessage("Action will permanently delete this task!\n\nAre you sure you want to continue?")
+                .setPositiveButton("Yes") { _, _ ->
+                    val taskToDelete = dbRepo.getTaskSingle(taskID)
+                    val notifToDelete = dbRepo.getNotif(taskID)
+                    val tagToDelete = dbRepo.getTagsID(taskID)
+                    if(tagToDelete.isNotEmpty()){
+                        dbRepo.deleteTag(tagToDelete[0])
+                    }else{
+                        Log.i(TAG, "Tag record not found.")
+                    }
+                    if(notifToDelete.isNotEmpty()){
+                        dbRepo.deleteNotif(notifToDelete[0])
+                    }else{
+                        Log.i(TAG, "Notification record not found.")
+                    }
+                    dbRepo.deleteTask(taskToDelete[0])
                     //Remove TaskDetails activity from backstack
                     finish()
                 }

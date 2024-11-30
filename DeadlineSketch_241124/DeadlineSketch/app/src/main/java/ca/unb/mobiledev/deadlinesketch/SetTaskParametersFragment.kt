@@ -8,6 +8,7 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -34,13 +35,16 @@ class SetTaskParametersFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var taskTitle: TextView
     private lateinit var taskDueDate: TextView
-    private lateinit var setTag: AutoCompleteTextView
+    private lateinit var setTag: Spinner
     private lateinit var setList: Spinner
     private lateinit var setActivationDate: EditText
     private lateinit var setpriority: Spinner
     private var positionList: Int = -1
+    private var positionTag: Int = -1
     private var positionPriority: Int = -1
     private  lateinit var dbRepo: dbRepo
+    private val tags = mutableListOf<String>()
+    private lateinit var tagAdapter: ArrayAdapter<String>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -74,7 +78,7 @@ class SetTaskParametersFragment : Fragment() {
 
         taskTitle = view.findViewById(R.id.tvTitleValue)
         taskDueDate = view.findViewById(R.id.tvDueDateValue)
-        setTag = view.findViewById(R.id.tag_auto_complete)
+        setTag = view.findViewById(R.id.tagSpinner)
         setList = view.findViewById(R.id.listSpinner)
         setActivationDate = view.findViewById(R.id.activateDate)
         setpriority = view.findViewById(R.id.list_spinner)
@@ -94,9 +98,8 @@ class SetTaskParametersFragment : Fragment() {
             Log.i(TAG, status.toString()+", "+viewModel.dueDate.toString())
         }
 
-        val tags = arrayOf("Work", "Personal", "School") // Example data
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tags)
-        setTag.setAdapter(adapter)
+        loadDBTags()
+
         var listList = dbRepo.getList()
         var i = 0
         var lists = arrayOf<String>()
@@ -115,9 +118,14 @@ class SetTaskParametersFragment : Fragment() {
         setpriority.adapter = priorityAdapter
 
         if(!viewModel.setTag.isNullOrEmpty()){
-            setTag.setText(viewModel.setTag)
+
+            positionTag = tagAdapter.getPosition(viewModel.setTag)
+            Log.i(TAG, "Testing viewmodel: "+viewModel.setTag+" and position: "+positionTag)
+            if(positionTag >= 0){
+                setTag.setSelection(positionTag)
+            }
         }else{
-            setTag.text = null
+            Log.i(TAG, "Tag record missing from possible tags.")
         }
 
         if(!viewModel.setList.isNullOrEmpty()){
@@ -144,14 +152,18 @@ class SetTaskParametersFragment : Fragment() {
             }
         }
 
-        //viewModel.setTag = setTag.text.toString()
-        //viewModel.setList = setList.getItemAtPosition(positionList).toString()
-        //viewModel.setpriority = setpriority.getItemAtPosition(positionPriority).toString()
-        //viewModel.setActivationDate = setActivationDate.text.toString()
-
-        setTag.setOnItemClickListener { parent, _, position, _ ->
-            val selectedTag = parent.getItemAtPosition(position).toString()
-            viewModel.setTag = selectedTag
+        setTag.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val selectedTag = parent.getItemAtPosition(position).toString()
+                if(selectedTag=="New_Tag"){
+                    addTagDialog()
+                }else{
+                    if(selectedTag!=""){
+                        viewModel.setTag = selectedTag
+                    }
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
         setList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -224,6 +236,48 @@ class SetTaskParametersFragment : Fragment() {
             viewModel.setActivationDate = selectedDate
         }, year, month, day)
         datePickerDialog.show()
+    }
+
+    private fun loadDBTags(){
+        var tagList = dbRepo.getTagList()
+        tags.clear()
+        var j = 0
+        tags.add("")
+        tags.add("New_Tag")
+        while(j < tagList.size){
+            tags.add(tagList[j].tag_name)
+            j += 1
+        }
+        updateTagSpinner(tags)
+    }
+
+    private fun addTag(tagName: String){
+        tags.add(tagName)
+        viewModel.setTag = tagName
+        updateTagSpinner(tags)
+        val positionTag = tagAdapter.getPosition(tagName)
+        if (positionTag >= 0) { setTag.setSelection(positionTag) }
+    }
+
+    private fun addTagDialog(){
+        val builder = AlertDialog.Builder(requireContext())
+        val input = EditText(requireContext())
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+        builder.setPositiveButton("Add"){ _, _ ->
+            val newTagName = input.text.toString()
+            if (newTagName.isNotEmpty()){
+                addTag(newTagName)
+            }
+        }
+        builder.setNegativeButton("Cancel"){ dialog, _ -> dialog.cancel()}
+        builder.show()
+    }
+
+    private fun updateTagSpinner(allTags: List<String>){
+        tagAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item,allTags)
+        tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        setTag.adapter = tagAdapter
     }
 
     companion object {}

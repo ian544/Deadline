@@ -13,6 +13,9 @@ interface NotificationDao {
     @Query("SELECT * from notification_table WHERE notification_table.task_id = :taskID")
     fun listAllNotificationsFromTask(taskID: Int): List<Notification>
 
+    @Query("SELECT * from notification_table ")
+    fun listAllNotifications(): List<Notification>
+
     @Update(Notification::class)
     fun changeNotification(notification: Notification)
 

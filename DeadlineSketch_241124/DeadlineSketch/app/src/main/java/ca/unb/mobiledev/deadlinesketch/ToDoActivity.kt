@@ -15,12 +15,13 @@ import androidx.viewpager2.widget.ViewPager2
 import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
 class ToDoActivity : AppCompatActivity() {
+    private lateinit var dbRepo: dbRepo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_to_do)
 
-        val dbRepo: dbRepo = dbRepo(this)
+        dbRepo = dbRepo(applicationContext)
         var listList = dbRepo.getList()
         var i = 0
         var listNames: MutableList<String> = mutableListOf<String>()
@@ -38,22 +39,7 @@ class ToDoActivity : AppCompatActivity() {
         }
 
         viewPager.setCurrentItem(1, false)
-        //val navController = findNavController(R.id.fragmentContainerView)
 
-        //val prevButton: Button = findViewById(R.id.prevButton)
-        //val nextButton: Button = findViewById(R.id.nextButton)
-
-//        prevButton.setOnClickListener {
-//            val previousItem = (viewPager.currentItem - 1 + fragmentNames.size) % fragmentNames.size
-//            viewPager.currentItem = previousItem
-//        }
-//
-//        nextButton.setOnClickListener {
-//            val nextItem = (viewPager.currentItem + 1) % fragmentNames.size
-//            viewPager.currentItem = nextItem
-//        }
-
-        //Schedule for removal if home back press is sufficient (testing needed)
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val intent = Intent(this@ToDoActivity, MainActivity::class.java)

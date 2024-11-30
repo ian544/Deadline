@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import ca.unb.mobiledev.deadlinesketch.entity.Tag
+import ca.unb.mobiledev.deadlinesketch.entity.list
 
 @Dao
 interface TagDao {
@@ -15,6 +16,9 @@ interface TagDao {
 
     @Query("SELECT * from task_table, tag_table WHERE tag_name = :name")
     fun listAllTagsFromName(name: String): List<Tag>
+
+    @Query("SELECT * from tag_table ORDER BY tag_id ASC")
+    fun listAllTags(): List<Tag>
 
     @Update(Tag::class)
     fun changeTag(task: Tag)

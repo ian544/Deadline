@@ -8,15 +8,20 @@ import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ca.unb.mobiledev.deadlinesketch.db.AppDatabase
+import ca.unb.mobiledev.deadlinesketch.entity.Task
+import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 
 class TaskViewModel : ViewModel() {
     var title: String = ""
     var dueDate: String = ""
     var description: String = ""
+    var tagID: Int = 0
     var setTag: String = ""
     var setList: String = ""
     var setActivationDate: String = ""
     var setpriority: String = ""
+    var notifID: Int = 0
     var notifTitle: String = ""
     var notifDesc: String = ""
     var notifDate: String = ""
@@ -24,15 +29,7 @@ class TaskViewModel : ViewModel() {
     var notifConfirmRepeating: Boolean = false
     var notifinterval: String = ""
     var isEditMode: Boolean = false
-    var taskID: Int = -1
-    var create_FillFromDB: Boolean = true
-    var param_FillFromDB: Boolean = true
-    //LiveData for observing task data; waiting for database integration
-    var taskList: LiveData<List<Task>> = MutableLiveData()  //replace with repository info once available
-    init {
-        // Initialize data; waiting for database integration
-    }
+    var taskID: Int = 0
+    var originalList: Int = -1
+    var originalListName: String = ""
 }
-
-
-

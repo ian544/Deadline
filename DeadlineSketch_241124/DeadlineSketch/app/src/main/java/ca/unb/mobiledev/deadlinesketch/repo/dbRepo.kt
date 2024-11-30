@@ -1,6 +1,8 @@
 package ca.unb.mobiledev.deadlinesketch.repo
 import android.app.Application
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import ca.unb.mobiledev.deadlinesketch.dao.NotificationDao
 import ca.unb.mobiledev.deadlinesketch.dao.TagDao
 import ca.unb.mobiledev.deadlinesketch.dao.TaskDao
@@ -11,7 +13,9 @@ import ca.unb.mobiledev.deadlinesketch.entity.Task
 import ca.unb.mobiledev.deadlinesketch.entity.list
 import ca.unb.mobiledev.deadlinesketch.db.AppDatabase
 import ca.unb.mobiledev.deadlinesketch.db.AppDatabase.Companion.getDatabase
+import java.lang.Thread.sleep
 import java.util.concurrent.Callable
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Future
 
@@ -58,10 +62,64 @@ class dbRepo(context: Context) {
         AppDatabase.databaseWriterExecutor.execute { tag_Dao.insertTag(tag) }
     }
 
+    fun insertAndUpdateList(task: Task, notification: Notification, tag: Tag){
+        val latch = CountDownLatch(3)
+        var boop = false
+        AppDatabase.databaseWriterExecutor.execute {
+            task_Dao.insertTask(task)
+            latch.countDown()
+            boop =true
+        }
+        while(!boop){
+            //this is a terrible solution, but it works
+        }
+        AppDatabase.databaseWriterExecutor.execute {
+            var taskTask = task_Dao.listSingleTaskName(task.title)
+            tag.task_id = taskTask[0].task_id
+            tag_Dao.insertTag(tag)
+            latch.countDown()
+        }
+        AppDatabase.databaseWriterExecutor.execute {
+            var taskTask = task_Dao.listSingleTaskName(task.title)
+            notification.task_id = taskTask[0].task_id
+            notif_Dao.insertNotification(notification)
+            latch.countDown()
+        }
+
+        latch.await()
+    }
+
+    fun updateEditedTask(task: Task, notification: Notification, tag: Tag){
+        val latch = CountDownLatch(3)
+
+        updateTask(task, latch)
+        updateNotif(notification, latch)
+        updateTag(tag, latch)
+
+        latch.await()
+    }
+
     fun getList(): List<list>{
         val dataReadFuture: Future<List<list>> = AppDatabase.databaseWriterExecutor.submit(
             Callable {
                 list_dao.listAllLists()
+            })
+        return try {
+            while (!dataReadFuture.isDone) {
+            }
+            dataReadFuture.get()
+        }catch(e: ExecutionException){
+            emptyList()
+        }
+        catch(e: InterruptedException){
+            emptyList()
+        }
+    }
+
+    fun getTagList(): List<Tag>{
+        val dataReadFuture: Future<List<Tag>> = AppDatabase.databaseWriterExecutor.submit(
+            Callable {
+                tag_Dao.listAllTags()
             })
         return try {
             while (!dataReadFuture.isDone) {
@@ -191,6 +249,22 @@ class dbRepo(context: Context) {
             emptyList()
         }
     }
+    fun getNotifAll(): List<Notification>{
+        val dataReadFuture: Future<List<Notification>> = AppDatabase.databaseWriterExecutor.submit(
+            Callable {
+                notif_Dao.listAllNotifications()
+            })
+        return try {
+            while (!dataReadFuture.isDone) {
+            }
+            dataReadFuture.get()
+        }catch(e: ExecutionException){
+            emptyList()
+        }
+        catch(e: InterruptedException){
+            emptyList()
+        }
+    }
 
     fun getTagsTask(name: String): List<Tag>{
         val dataReadFuture: Future<List<Tag>> = AppDatabase.databaseWriterExecutor.submit(
@@ -227,14 +301,23 @@ class dbRepo(context: Context) {
     fun updateList(list: list){
         AppDatabase.databaseWriterExecutor.execute { list_dao.updateList(list) }
     }
-    fun updateNotif(notification: Notification){
-        AppDatabase.databaseWriterExecutor.execute { notif_Dao.changeNotification(notification) }
+    fun updateNotif(notification: Notification, latch: CountDownLatch){
+        AppDatabase.databaseWriterExecutor.execute {
+            notif_Dao.changeNotification(notification)
+            latch.countDown()
+        }
     }
-    fun updateTask(task: Task){
-        AppDatabase.databaseWriterExecutor.execute { task_Dao.changeTask(task) }
+    fun updateTask(task: Task, latch: CountDownLatch){
+        AppDatabase.databaseWriterExecutor.execute {
+            task_Dao.changeTask(task)
+            latch.countDown()
+        }
     }
-    fun updateTag(tag: Tag){
-        AppDatabase.databaseWriterExecutor.execute { tag_Dao.changeTag(tag) }
+    fun updateTag(tag: Tag, latch: CountDownLatch){
+        AppDatabase.databaseWriterExecutor.execute {
+            tag_Dao.changeTag(tag)
+            latch.countDown()
+        }
     }
 
     fun deleteList(list: list): Int{
@@ -302,6 +385,17 @@ class dbRepo(context: Context) {
         }
         catch(e: InterruptedException){
             -1
+        }
+    }
+    @Volatile
+    private var INSTANCE: dbRepo? = null
+
+    fun getInstance(context: Context): dbRepo {
+        Log.i(TAG, "Testing 1")
+        return INSTANCE?: synchronized(this){
+            val instance = dbRepo(context.applicationContext)
+            INSTANCE = instance
+            instance
         }
     }
 }

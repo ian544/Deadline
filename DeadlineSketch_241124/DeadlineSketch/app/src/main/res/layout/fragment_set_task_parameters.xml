@@ -111,7 +111,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
-    <AutoCompleteTextView
+<!--    <AutoCompleteTextView
         android:id="@+id/tag_auto_complete"
         android:layout_width="0dp"
         android:layout_height="48dp"
@@ -121,6 +121,18 @@
         android:hint="Choose or enter a new tag"
         android:inputType="text"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tvSetTag"
+        app:layout_constraintTop_toTopOf="@+id/tvSetTag" />-->
+
+    <Spinner
+        android:id="@+id/tagSpinner"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_title_border"
+        android:spinnerMode="dropdown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/tvSetTag"
