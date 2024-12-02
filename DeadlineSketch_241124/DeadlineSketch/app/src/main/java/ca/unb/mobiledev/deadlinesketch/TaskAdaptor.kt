@@ -32,6 +32,7 @@ class TaskAdapter(private val parentActivity: Activity, private val mDataset: Li
             intent.putExtra("taskTitle", task.title)
             intent.putExtra("taskDescription", task.description)
             intent.putExtra("taskDueDate", task.due_date)
+            intent.putExtra("taskID", task.task_id)
             parentActivity.startActivity(intent)
         }
     }

@@ -60,7 +60,8 @@ class AddEditTaskHost : AppCompatActivity() {
         val task = taskList[0]
 
         var title = task.title
-        var status = "ACTIVE"
+        var status = task.status
+        Log.i(TAG, "task status: "+status)
         var notifDisabled = false
         var dueDate = task.due_date
         var description = task.description
@@ -76,7 +77,7 @@ class AddEditTaskHost : AppCompatActivity() {
         var notifDesc = ""
         var notifDate = ""
         var notifTime = ""
-        var notifConfirmRepeating: Boolean = false
+        var notifConfirmRepeating = false
         var notifinterval = ""
 
         if(returnedTag.isNotEmpty()){
@@ -94,6 +95,7 @@ class AddEditTaskHost : AppCompatActivity() {
             notifDate = notif.activation_date
             notifDesc = notif.notification_description
             notifinterval = notif.reaccuring_time
+            notifDisabled = notif.disabled
         }
 
         viewModel.notifDisabled = notifDisabled

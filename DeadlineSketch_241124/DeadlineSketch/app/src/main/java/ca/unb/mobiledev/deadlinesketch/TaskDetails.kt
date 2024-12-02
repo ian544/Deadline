@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -21,11 +22,12 @@ class TaskDetails : AppCompatActivity() {
 
         var intent = intent
         var taskID = intent.getIntExtra("taskID",-1)
-        Log.i(TAG,"Task Details: " + taskID.toString())
+        //Log.i(TAG,"Task Details: " + taskID.toString())
         var taskTitle = intent.getStringExtra("taskTitle")
         var taskDescription = intent.getStringExtra("taskDescription")
         var taskDueDate = intent.getStringExtra("taskDueDate")
         var taskPriority = intent.getStringExtra("taskPriority")
+        var taskStatus = intent.getStringExtra("taskStatus")
 
         val descView = findViewById<TextView>(R.id.description_textview)
         descView.text = taskDescription
@@ -39,6 +41,49 @@ class TaskDetails : AppCompatActivity() {
 
         val titleView = findViewById<TextView>(R.id.taskTitle_textview)
         titleView.text = taskTitle
+
+        val reactivateButton: Button = findViewById(R.id.conditionalReactivateButton)
+        if(taskStatus=="Complete"){
+            reactivateButton.visibility = View.VISIBLE
+        }else{
+            reactivateButton.visibility = View.GONE
+        }
+        reactivateButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Reactivate Task")
+                .setMessage("Set task status to Active?")
+                .setPositiveButton("Yes"){_,_ ->
+                    val taskToUpdate = dbRepo.getTaskSingle(taskID)
+                    taskToUpdate[0].status = "Active"
+                    val changeTaskList = dbRepo.getSingleListName("To_Do")
+                    taskToUpdate[0].list_id = changeTaskList[0].list_id
+                    dbRepo.defaultUpdateTask(taskToUpdate[0])
+                    val notifToUpdate = dbRepo.getNotif(taskID)
+                    notifToUpdate[0].disabled = true
+                    dbRepo.defaultUpdateNotif(notifToUpdate[0])
+                    finish()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        val completeTask: Button = findViewById(R.id.complete_task_button)
+        completeTask.setOnClickListener {
+            Log.i(TAG, "clicked here")
+            AlertDialog.Builder(this)
+                .setTitle("Complete Task")
+                .setMessage("Update task status and move to Archive?")
+                .setPositiveButton("Yes"){_,_ ->
+                    val taskToComplete = dbRepo.getTaskSingle(taskID)
+                    taskToComplete[0].status = "Complete"
+                    val changeToArchive = dbRepo.getSingleListName("Archive")
+                    taskToComplete[0].list_id = changeToArchive[0].list_id
+                    dbRepo.defaultUpdateTask(taskToComplete[0])
+                    finish()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
 
         val exitTaskButton: Button = findViewById(R.id.toListButton3)
         exitTaskButton.setOnClickListener {

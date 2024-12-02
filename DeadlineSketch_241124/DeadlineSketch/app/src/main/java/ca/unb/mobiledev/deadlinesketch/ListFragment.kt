@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity.LAYOUT_INFLATER_SERVICE
 import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -33,9 +34,9 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         super.onViewCreated(view, savedInstanceState)
         dbRepo = dbRepo(requireActivity().applicationContext)
 
-        val titleButton: Button = view.findViewById(R.id.ListTitle)
+        val titleField: TextView = view.findViewById(R.id.ListTitle)
         fragmentName = arguments?.getString("name") ?: ""
-        titleButton.text = fragmentName
+        titleField.text = fragmentName
          curList = dbRepo.getSingleListName(fragmentName)[0]
 
         val logo: ImageView = view.findViewById(R.id.logo_home)

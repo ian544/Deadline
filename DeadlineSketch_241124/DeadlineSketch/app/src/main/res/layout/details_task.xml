@@ -69,22 +69,34 @@
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <Button
-        android:id="@+id/delete_task_button"
-        android:layout_width="wrap_content"
+        android:id="@+id/conditionalReactivateButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Reactivate Task"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:backgroundTint="#2E8B57"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/EditTaskButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/delete_task_button"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#404040"
-        android:onClick="deleteTask"
         android:padding="4dp"
-        android:text=" Delete Task "
+        android:text="  Delete Task  "
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/toListButton3"
@@ -92,13 +104,13 @@
         android:layout_width="125dp"
         android:layout_height="48dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="8dp"
         android:text="Exit Task"
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="11sp"
         app:cornerRadius="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/delete_task_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:strokeColor="@color/black"
         app:strokeWidth="1dp" />
@@ -109,15 +121,29 @@
         android:layout_width="125dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="8dp"
         android:text="Edit Task"
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="11sp"
         app:cornerRadius="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/complete_task_button"
         app:layout_constraintStart_toStartOf="parent"
         app:strokeColor="@color/black"
         app:strokeWidth="1dp" />
+
+    <Button
+        android:id="@+id/complete_task_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#2E8B57"
+        android:padding="4dp"
+        android:text=" Complete Task "
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

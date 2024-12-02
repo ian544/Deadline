@@ -19,6 +19,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
@@ -39,6 +40,7 @@ class SetTaskParametersFragment : Fragment() {
     private lateinit var setList: Spinner
     private lateinit var setActivationDate: EditText
     private lateinit var setpriority: Spinner
+    private lateinit var disableNotifs: CheckBox
     private var positionList: Int = -1
     private var positionTag: Int = -1
     private var positionPriority: Int = -1
@@ -82,6 +84,7 @@ class SetTaskParametersFragment : Fragment() {
         setList = view.findViewById(R.id.listSpinner)
         setActivationDate = view.findViewById(R.id.activateDate)
         setpriority = view.findViewById(R.id.list_spinner)
+        disableNotifs = view.findViewById(R.id.disableNotifsCheckBox)
 
         if(!viewModel.title.isNullOrEmpty()){
             taskTitle.text = viewModel.title
@@ -102,10 +105,13 @@ class SetTaskParametersFragment : Fragment() {
 
         var listList = dbRepo.getList()
         var i = 0
-        var lists = arrayOf<String>()
+        var lists = ArrayList<String>()
+        lists.add("")
         while(i < listList.size){
-            lists = lists + listList[i].list_name
-            i = i+1;
+            if(listList[i].list_name != "Archive"){
+                lists.add(listList[i].list_name)
+            }
+            i += 1
         }
         val taskLists = lists
         val listAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, taskLists)
@@ -128,7 +134,7 @@ class SetTaskParametersFragment : Fragment() {
             Log.i(TAG, "Tag record missing from possible tags.")
         }
 
-        if(!viewModel.setList.isNullOrEmpty()){
+        if(!viewModel.setList.isNullOrEmpty()&&viewModel.setList!="Archive"){
             positionList = listAdapter.getPosition(viewModel.setList)
             if(positionList >= 0){
                 setList.setSelection(positionList)
@@ -182,6 +188,12 @@ class SetTaskParametersFragment : Fragment() {
                 viewModel.setpriority = selectedPriority
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        disableNotifs.isChecked = viewModel.notifDisabled
+        disableNotifs.setOnCheckedChangeListener { _, isChecked ->
+            disableNotifs.isEnabled = isChecked
+            viewModel.notifConfirmRepeating = isChecked
         }
 
         val backToCreate: Button = view.findViewById(R.id.toCreateTask1)

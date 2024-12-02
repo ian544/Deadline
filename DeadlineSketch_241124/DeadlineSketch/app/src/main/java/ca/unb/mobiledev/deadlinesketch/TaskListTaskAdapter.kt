@@ -34,11 +34,12 @@ class TaskListTaskAdapter(private val parentFragment: Fragment, taskList: List<T
             val context = parentFragment.requireContext()
             val intent = Intent(context, TaskDetails::class.java)
             intent.putExtra("taskID", task.task_id)
-            Log.i(TAG, "TaskDetails intent call: "+task.task_id.toString())
+            //Log.i(TAG, "TaskDetails intent call: "+task.task_id.toString())
             intent.putExtra("taskTitle", task.title)
             intent.putExtra("taskDescription", task.description)
             intent.putExtra("taskDueDate", task.due_date)
             intent.putExtra("taskPriority", task.priority)
+            intent.putExtra("taskStatus", task.status)
             context.startActivity(intent)
         }
     }

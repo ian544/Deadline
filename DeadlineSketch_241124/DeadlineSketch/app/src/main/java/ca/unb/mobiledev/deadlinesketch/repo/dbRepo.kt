@@ -268,6 +268,22 @@ class dbRepo(context: Context) {
             emptyList()
         }
     }
+    fun getAllUnscheduledNotif(): List<NotificationDao.NotificationWithPriority>{
+        val dataReadFuture: Future<List<NotificationDao.NotificationWithPriority>> = AppDatabase.databaseWriterExecutor.submit(
+            Callable {
+                notif_Dao.listAllUnscheduledNotificationsWithPriority()
+            })
+        return try {
+            while (!dataReadFuture.isDone) {
+            }
+            dataReadFuture.get()
+        }catch(e: ExecutionException){
+            emptyList()
+        }
+        catch(e: InterruptedException){
+            emptyList()
+        }
+    }
 
     fun getTagsTask(name: String): List<Tag>{
         val dataReadFuture: Future<List<Tag>> = AppDatabase.databaseWriterExecutor.submit(
@@ -309,6 +325,12 @@ class dbRepo(context: Context) {
             notif_Dao.changeNotification(notification)
             latch.countDown()
         }
+    }
+    fun defaultUpdateNotif(notification: Notification){
+        AppDatabase.databaseWriterExecutor.execute { notif_Dao.changeNotification(notification) }
+    }
+    fun defaultUpdateTask(task: Task){
+        AppDatabase.databaseWriterExecutor.execute { task_Dao.changeTask(task) }
     }
     fun updateTask(task: Task, latch: CountDownLatch){
         AppDatabase.databaseWriterExecutor.execute {

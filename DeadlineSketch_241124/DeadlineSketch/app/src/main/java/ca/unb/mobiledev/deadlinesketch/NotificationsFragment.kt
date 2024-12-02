@@ -201,7 +201,6 @@ class NotificationsFragment : Fragment() {
 
                     val notifObject = Notification()
 
-
                         notifObject.notification_name = viewModel.notifTitle
                         notifObject.notification_description = viewModel.notifDesc
                         notifObject.activation_time = viewModel.notifTime

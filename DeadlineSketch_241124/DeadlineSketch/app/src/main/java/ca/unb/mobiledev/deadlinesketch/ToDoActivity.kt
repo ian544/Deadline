@@ -38,7 +38,7 @@ class ToDoActivity : AppCompatActivity() {
             Log.i("ToDoActivity", "Method failed: viewPager size is not greater than 1")
         }
 
-        viewPager.setCurrentItem(1, false)
+        viewPager.setCurrentItem(0, false)
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

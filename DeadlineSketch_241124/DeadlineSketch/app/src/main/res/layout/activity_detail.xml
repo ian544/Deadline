@@ -1,36 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    android:orientation="vertical"
-    tools:context="ca.unb.mobiledev.deadlinesketch.DetailActivity">
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/main"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:padding="16dp"
+tools:context="ca.unb.mobiledev.deadlinesketch.DetailActivity">
 
-    <TextView
-        android:id="@+id/taskTitle_textview"
+<TextView
+    android:id="@+id/taskTitle_textview"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="32dp"
+    android:padding="8dp"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+
+<TextView
+    android:id="@+id/dueDate_textview"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:paddingBottom="8dp"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/taskTitle_textview" />
+
+<TextView
+    android:id="@+id/priority_textview"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    android:paddingBottom="8dp"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textStyle="bold"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/taskTitle_textview" />
+
+<View
+    android:id="@+id/divider"
+    android:layout_width="0dp"
+    android:layout_height="4dp"
+    android:layout_marginTop="130dp"
+    android:background="#000000"
+    android:backgroundTint="#000000"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<TextView
+    android:id="@+id/description_textview"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:paddingBottom="8dp"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <Button
+        android:id="@+id/complete_task_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#2E8B57"
+        android:padding="4dp"
+        android:text=" Complete Task "
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:paddingBottom="8dp"
-        android:paddingTop="16dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/dueDate_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
-        android:paddingBottom="8dp"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/HomePageButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="125dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:text="Exit Task"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="11sp"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1dp" />
 
-    <TextView
-        android:id="@+id/description_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:paddingBottom="8dp"/>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

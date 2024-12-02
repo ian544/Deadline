@@ -17,5 +17,6 @@ class Notification {
     var isReacurring: Boolean = false
     var reaccuring_time: String = ""
     var disabled: Boolean = false
+    var scheduled: Boolean = false
 
 }
