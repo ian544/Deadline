@@ -46,7 +46,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             startActivity(intent)
         }
 
-        val gearIcon: ImageView = view.findViewById(R.id.gearIcon)
+        /*val gearIcon: ImageView = view.findViewById(R.id.gearIcon)
         gearIcon.setOnClickListener { popupView ->
             val inflater: LayoutInflater = context?.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val contentView: View = inflater.inflate(R.layout.popup_layout, null)
@@ -62,7 +62,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             })
             popupWindow.isFocusable = true
             popupWindow.showAsDropDown(popupView, 0, 0)
-        }
+        }*/
 
         val filterButton: MaterialButton = view.findViewById(R.id.FilterButton)
         filterButton.setOnClickListener { popupView ->

@@ -17,35 +17,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/gearIcon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="@string/gear_icon_desc"
-        android:src="@drawable/ic_action_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/ListTitle"
-        android:layout_height="80dp"
         android:layout_width="200dp"
+        android:layout_height="80dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_list_border"
+        android:gravity="center"
         android:text="ToDo List"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:gravity="center"
-        android:background="@drawable/rounded_list_border"
         app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintEnd_toStartOf="@+id/gearIcon"
         app:layout_constraintStart_toEndOf="@+id/logo_home"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/toListButton"
