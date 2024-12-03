@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra("priority", notif.priority)
                 //Adding task priority wouldn't be a bad next step if possible
             }
-            val pendingIntent = PendingIntent.getBroadcast(this,notif.notification.notification_id,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(this,notif.notification.notification_id,intent,PendingIntent.FLAG_MUTABLE)
             val triggerTime = NotifUtils.calculateTriggerTime(notif.notification)
             NotifUtils.scheduleAlarm(alrmMngr!!,pendingIntent,notif,triggerTime)
             //Note: does not have null pointer exception protection

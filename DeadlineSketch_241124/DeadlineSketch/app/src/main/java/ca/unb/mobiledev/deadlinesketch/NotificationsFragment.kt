@@ -179,27 +179,40 @@ class NotificationsFragment : Fragment() {
 
         val submitTask: Button = view.findViewById(R.id.submit_task_button)
         submitTask.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setMessage("Submit Task to DataBase and Exit?")
-                .setPositiveButton("Yes") { _, _ ->
-                    val listID = dbRepo.getSingleListName(viewModel.setList)[0].list_id
-                    Log.i(TAG, listID.toString())
-                    var taskID = 0
-                    var notifID = 0
-                    var tagID = 0
-                    var originalList = 0
+            if(viewModel.setList==""){
+                AlertDialog.Builder(requireContext())
+                    .setMessage("Task needs a selected task list\nReturn to Parameters page and chose a task list.")
+                    .setPositiveButton("OK"){dialog,_->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }else if(viewModel.notifDate==""){
+                AlertDialog.Builder(requireContext())
+                    .setMessage("Notifications need a selected activation date\nChose an activation date before submitting the task.")
+                    .setPositiveButton("OK"){dialog,_->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }else {
+                AlertDialog.Builder(requireContext())
+                    .setMessage("Submit Task to DataBase and Exit?")
+                    .setPositiveButton("Yes") { _, _ ->
 
-                    val taskObject = Task()
-                        //taskID
+                        val listID = dbRepo.getSingleListName(viewModel.setList)[0].list_id
+                        Log.i(TAG, listID.toString())
+                        var taskID = 0
+
+                        val taskObject = Task()
+                        taskID
                         taskObject.list_id = listID
                         taskObject.title = viewModel.title
                         taskObject.due_date = viewModel.dueDate
                         taskObject.priority = viewModel.setpriority
                         taskObject.activate_time = viewModel.setActivationDate
                         taskObject.description = viewModel.description
-                    taskObject.status = viewModel.status
+                        taskObject.status = viewModel.status
 
-                    val notifObject = Notification()
+                        val notifObject = Notification()
 
                         notifObject.notification_name = viewModel.notifTitle
                         notifObject.notification_description = viewModel.notifDesc
@@ -208,43 +221,58 @@ class NotificationsFragment : Fragment() {
                         notifObject.isReacurring = viewModel.notifConfirmRepeating
                         notifObject.reaccuring_time = viewModel.notifinterval
 
-                    val tagObject = Tag()
+                        val tagObject = Tag()
 
                         tagObject.tag_name = viewModel.setTag
-                    if(viewModel.isEditMode){
-                        taskObject.task_id = viewModel.taskID
-                        notifObject.notification_id = viewModel.notifID
-                        notifObject.task_id = viewModel.taskID
-                        tagObject.tag_id = viewModel.tagID
-                        tagObject.task_id = viewModel.taskID
+                        if (viewModel.isEditMode) {
+                            taskObject.task_id = viewModel.taskID
+                            notifObject.notification_id = viewModel.notifID
+                            notifObject.task_id = viewModel.taskID
+                            tagObject.tag_id = viewModel.tagID
+                            tagObject.task_id = viewModel.taskID
+                        }
+                        if (viewModel.isEditMode) {
+                            Log.i(TAG, viewModel.notifDisabled.toString())
+                            Log.i(
+                                TAG,
+                                viewModel.taskID.toString() + tagObject.tag_id.toString() + notifObject.notification_id.toString()
+                            )
+                            dbRepo.updateEditedTask(taskObject, notifObject, tagObject)
+                        } else {
+                            Log.i(TAG, viewModel.notifDisabled.toString())
+                            //couldn't get latch or a better wait async function to work, this has to do
+                            dbRepo.insertTask(
+                                dbRepo.getSingleListName(viewModel.setList)[0].list_id,
+                                viewModel.title,
+                                viewModel.description,
+                                viewModel.dueDate,
+                                viewModel.setActivationDate,
+                                viewModel.setpriority,
+                                viewModel.status
+                            )
+                            sleep(100)
+                            dbRepo.insertNotif(
+                                viewModel.notifTitle,
+                                viewModel.notifDesc,
+                                dbRepo.getTaskSingleName(viewModel.title)[0].task_id,
+                                viewModel.notifTime,
+                                viewModel.notifDate,
+                                viewModel.notifConfirmRepeating,
+                                viewModel.notifinterval,
+                                viewModel.notifDisabled
+                            )
+                            dbRepo.insertTag(
+                                viewModel.setTag,
+                                dbRepo.getTaskSingleName(viewModel.title)[0].task_id
+                            )
+                            sleep(100)
+                        }
+                        Log.i(TAG, viewModel.status)
+                        activity?.finish()
                     }
-                    if(viewModel.isEditMode){
-                        Log.i(TAG, viewModel.notifDisabled.toString())
-                        Log.i(TAG, viewModel.taskID.toString() + tagObject.tag_id.toString() + notifObject.notification_id.toString())
-                        dbRepo.updateEditedTask(taskObject, notifObject, tagObject)
-                    }else{
-                        Log.i(TAG, viewModel.notifDisabled.toString())
-                        //dbRepo.insertAndUpdateList(taskObject, notifObject, tagObject)
-                        //couldn't get latch or a better wait async function to work, this has to do
-                        dbRepo.insertTask(dbRepo.getSingleListName(viewModel.setList)[0].list_id, viewModel.title, viewModel.description, viewModel.dueDate, viewModel.setActivationDate,viewModel.setpriority, viewModel.status)
-                        sleep(100)
-                        dbRepo.insertNotif(viewModel.notifTitle,viewModel.notifDesc,dbRepo.getTaskSingleName(viewModel.title)[0].task_id, viewModel.notifTime, viewModel.notifDate, viewModel.notifConfirmRepeating, viewModel.notifinterval, viewModel.notifDisabled)
-                        dbRepo.insertTag(viewModel.setTag,dbRepo.getTaskSingleName(viewModel.title)[0].task_id)
-                        sleep(100)
-
-                    //dbRepo.insertTask(listID, viewModel.title, viewModel.description, viewModel.dueDate, viewModel.setActivationDate,viewModel.setpriority)
-                    }
-                    /*dbRepo.insertTask(dbRepo.getSingleListName(viewModel.setList)[0].list_id, viewModel.title, viewModel.description, viewModel.dueDate, viewModel.setActivationDate,viewModel.setpriority)
-                    sleep(500)
-                    dbRepo.insertNotif(viewModel.notifTitle,viewModel.notifDesc,dbRepo.getTaskSingleName(viewModel.title)[0].task_id, viewModel.notifTime, viewModel.notifDate, viewModel.notifConfirmRepeating, viewModel.notifinterval)
-                    sleep(500)
-                    dbRepo.insertTag(viewModel.setTag,dbRepo.getTaskSingleName(viewModel.title)[0].task_id)
-                    sleep(500)*/
-                    Log.i(TAG, viewModel.status)
-                    activity?.finish()
-                }
-                .setNegativeButton("Cancel", null)
-                .show()
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
         }
 
         val noSaveBackButton: Button = view.findViewById(R.id.toListButton2)

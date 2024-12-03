@@ -59,7 +59,7 @@ class TaskDetails : AppCompatActivity() {
                     taskToUpdate[0].list_id = changeTaskList[0].list_id
                     dbRepo.defaultUpdateTask(taskToUpdate[0])
                     val notifToUpdate = dbRepo.getNotif(taskID)
-                    notifToUpdate[0].disabled = true
+                    notifToUpdate[0].disabled = false
                     dbRepo.defaultUpdateNotif(notifToUpdate[0])
                     finish()
                 }
@@ -79,8 +79,12 @@ class TaskDetails : AppCompatActivity() {
                     val changeToArchive = dbRepo.getSingleListName("Archive")
                     taskToComplete[0].list_id = changeToArchive[0].list_id
                     dbRepo.defaultUpdateTask(taskToComplete[0])
+                    val notifToUpdate = dbRepo.getNotif(taskID)
+                    notifToUpdate[0].disabled = true
+                    dbRepo.defaultUpdateNotif(notifToUpdate[0])
                     finish()
                 }
+
                 .setNegativeButton("Cancel", null)
                 .show()
         }
