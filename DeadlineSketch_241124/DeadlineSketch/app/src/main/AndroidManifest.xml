@@ -20,7 +20,7 @@
             android:name=".ToDoActivity"
             android:exported="false" />
         <activity
-            android:name=".TestActivity"
+            android:name=".CalendarActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

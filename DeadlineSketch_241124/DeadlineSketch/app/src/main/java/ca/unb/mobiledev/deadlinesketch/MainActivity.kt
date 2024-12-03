@@ -6,37 +6,18 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.PopupWindow
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.unb.mobiledev.deadlinesketch.repo.dbRepo
 import java.lang.Thread.sleep
-import android.Manifest
-import ca.unb.mobiledev.deadlinesketch.entity.Notification
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -106,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
         val testButton: Button = findViewById(R.id.testButton)
         testButton.setOnClickListener {
-            val intent = Intent(this, TestActivity::class.java)
+            val intent = Intent(this, CalendarActivity::class.java)
             startActivity(intent)
         }
         val todoButton: Button = findViewById(R.id.ToDoButton)
